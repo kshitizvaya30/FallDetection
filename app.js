@@ -1,29 +1,25 @@
 const express = require("express");
-const twilio = require("twilio");
 const cors = require("cors");
+const dotenv = require("dotenv");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+dotenv.config();
+const client = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
 
-const TWILIO_SID = "AC9a7d6ae4a1a9566e230dcd64adc603e2";
-const TWILIO_AUTH_TOKEN = "553856d57d87682e9638b7dfdb21a6fd";
-const TWILIO_PHONE_NUMBER = "+917976630412";
-
-function sendSMS(data){
-    const client = new twilio(TWILIO_SID, TWILIO_AUTH_TOKEN);
-    return client.messages
-    .create({
+async function sendSMS(data){
+    console.log("inside");
+    client.messages.create({
         body: data,
         from: '+12543848026',
-        to: TWILIO_PHONE_NUMBER
+        to: "+917976630412"
     }).then(message => console.log(message))
     .catch(err => console.log(err));
-
 }
 
 app.get("/api/fall_detected", (req, res) => {
-    sendSMS('Please Check User has Fallen , Location : ');
+    sendSMS('Please Check User has Fallen , Location : http://surl.li/gwmil');
     res.send("SUCCESS");
 });
 
